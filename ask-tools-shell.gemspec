@@ -4,7 +4,7 @@ Gem::Specification.new do |spec|
   spec.name = "ask-tools-shell"
   spec.version = Ask::Tools::Shell::VERSION
   spec.authors = ["Kaka Ruto"]
-  spec.email = ["kaka@anywaye.com"]
+  spec.email = ["kaka@myrrlabs.com"]
 
   spec.summary = "Shell, filesystem, and code execution tools"
   spec.description = "Bash, Read, Write, Edit, Glob, Grep, and Code tools for the ask-rb ecosystem."
