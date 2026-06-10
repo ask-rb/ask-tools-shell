@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
+require_relative "shell/version"
+require_relative "shell/bash"
+require_relative "shell/read"
+require_relative "shell/write"
+require_relative "shell/edit"
+require_relative "shell/glob"
+require_relative "shell/grep"
+require_relative "shell/code"
+
 module Ask
   module Tools
-    # Collection point for shell tools.
-    #
-    #   Ask::Tools::Shell.all  # => [Bash, Read, Write, ...] instances
-    #
     module Shell
       TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code].freeze
-
-      # Return an instance of every registered shell tool.
-      #
-      # @return [Array<Ask::Tool>]
-      def self.all
-        TOOLS.map(&:new)
-      end
     end
   end
 end

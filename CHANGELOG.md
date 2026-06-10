@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-06-10
+
+### Changed
+
+- Migrated `Ask::Tools::Bash` and `Ask::Tools::Code` to use `Ask::Sandbox.provider` (
+  `ask-sandbox-providers` gem) instead of direct `Open3.popen3` calls
+- Timed-out commands now return `Ask::Result.error` instead of `Ask::Result.ok`
+  with `timed_out: true`
+
+### Added
+
+- Dependency on `ask-sandbox-providers` (`~> 0.1`) for sandboxed command execution
+
 ## [0.1.0] - 2026-06-09
 
 ### Added

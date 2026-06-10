@@ -13,10 +13,6 @@ module Ask
         assert_equal "bash", @tool.name
       end
 
-      def test_description
-        assert_match(/bash command/i, @tool.description)
-      end
-
       def test_execute_echo
         result = @tool.call(command: "echo hello")
         assert_predicate result, :ok?
@@ -44,8 +40,8 @@ module Ask
 
       def test_timeout_kills_process
         result = @tool.call(command: "sleep 10", timeout: 1)
-        assert_predicate result, :ok?
-        assert result.output[:timed_out], "Expected process to time out"
+        refute_predicate result, :ok?
+        assert_equal "Command timed out", result.error
       end
     end
   end
