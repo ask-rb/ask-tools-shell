@@ -2,9 +2,9 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "ask-sandbox-providers", path: "../ask-sandbox-providers"
-gem "ask-tools", path: "../ask-tools"
-gem "ask-schema", path: "../ask-schema"
+gem "ask-sandbox-providers", "~> 0.1"
+gem "ask-tools", "~> 0.1"
+gem "ask-schema", "~> 0.1"
 
 group :test do
   gem "minitest", "~> 5.25"
