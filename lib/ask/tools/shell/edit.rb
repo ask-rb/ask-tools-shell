@@ -42,7 +42,7 @@ module Ask
 
       # Detect the dominant line ending in content.
       def self.detect_line_ending(content)
-        crlf = content.count("\r\n")
+        crlf = content.scan("\r\n").size
         lf = content.count("\n") - crlf
         crlf > lf ? "\r\n" : "\n"
       end

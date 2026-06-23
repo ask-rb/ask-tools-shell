@@ -15,6 +15,10 @@ module Ask
   module Tools
     module Shell
       TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code, ApplyPatch].freeze
+
+      def self.all
+        TOOLS.map(&:new)
+      end
     end
   end
 end
