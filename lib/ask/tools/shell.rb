@@ -9,11 +9,12 @@ require_relative "shell/edit"
 require_relative "shell/glob"
 require_relative "shell/grep"
 require_relative "shell/code"
+require_relative "shell/apply_patch"
 
 module Ask
   module Tools
     module Shell
-      TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code].freeze
+      TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code, ApplyPatch].freeze
     end
   end
 end
