@@ -96,6 +96,9 @@ module Ask
             end
 
             new_content = apply_chunks(raw, entry[:chunks])
+            if new_content.nil?
+              return Ask::Result.error(message: "Hunk does not match file content for: #{path}")
+            end
             operations.write_file(path, new_content)
             results << { action: "update", path: entry[:path] }
 
@@ -141,7 +144,7 @@ module Ask
             i += 1
             content_lines = []
             while i < lines.length && !lines[i].start_with?("***")
-              content_lines << lines[i].sub(/^\+/, "") if lines[i].start_with?("+")
+              content_lines << lines[i].sub(/^\+/, "")
               i += 1
             end
             entries << { type: :add, path: path, lines: content_lines }
@@ -194,7 +197,7 @@ module Ask
           new_text = chunk[:new].join("\n")
           file_text = lines.join("\n")
           idx = file_text.index(old_text)
-          next unless idx
+          return nil unless idx
 
           before = file_text[0...idx]
           after = file_text[(idx + old_text.length)..]

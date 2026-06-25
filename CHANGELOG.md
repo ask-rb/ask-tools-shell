@@ -1,3 +1,10 @@
+## [0.3.4] - 2026-06-25
+
+### Fixed
+- **apply_chunks** no longer silently skips unmatched hunks — returns error when hunk text not found in file
+- **Add File** parser no longer silently drops lines without `+` prefix — collects all lines as content
+- **ApplyPatch tool** now emits proper SSE events during streaming (removed early `next` that suppressed `output_item.added` and `function_call_arguments.delta`)
+
 ## [0.3.3] - 2026-06-25
 
 ### Changed

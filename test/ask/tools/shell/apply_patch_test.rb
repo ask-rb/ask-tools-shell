@@ -33,7 +33,7 @@ module Ask
         patch = "*** Begin Patch\n*** Add File: #{path}\nline without plus\n*** End Patch"
         result = @tool.execute(patchText: patch)
         assert_predicate result, :ok?
-        assert_equal "\n", File.read(path)
+        assert_equal "line without plus\n", File.read(path)
       end
 
       def test_add_file_already_exists
@@ -52,6 +52,15 @@ module Ask
         result = @tool.execute(patchText: patch)
         assert_predicate result, :ok?
         assert_equal "hello there\nfoo bar\nbaz qux", File.read(path)
+      end
+
+      def test_update_with_unmatched_hunk_returns_error
+        path = File.join(@tmpdir, "no_match.txt")
+        File.write(path, "aaa\nbbb\nccc")
+        patch = "*** Begin Patch\n*** Update File: #{path}\n@@\n-xxx\n+yyy\n*** End Patch"
+        result = @tool.execute(patchText: patch)
+        refute_predicate result, :ok?
+        assert_match(/Hunk does not match/i, result.error_message)
       end
 
       def test_update_file_not_found
