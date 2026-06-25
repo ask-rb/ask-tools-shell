@@ -1,3 +1,7 @@
+## [0.3.3] - 2026-06-25
+
+### Changed
+- FileMutationQueue tests (8 tests, atomic multi-file writes, rollback). Edge case coverage in bash/read/write tools. Infrastructure: rubocop, overcommit, bin/setup, CI matrix, SimpleCov.
 # Changelog
 
 ## 0.3.0 (2026-06-21)

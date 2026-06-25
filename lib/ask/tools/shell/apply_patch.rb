@@ -108,7 +108,7 @@ module Ask
           end
         end
 
-        summary = results.map { |r| "#{r[:action].upcase_first} #{r[:path]}" }.join("\n")
+        summary = results.map { |r| "#{r[:action].capitalize} #{r[:path]}" }.join("\n")
         Ask::Result.ok(data: { summary: summary, results: results }, metadata: { results: results })
       end
 

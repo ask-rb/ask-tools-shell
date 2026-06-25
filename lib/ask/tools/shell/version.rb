@@ -3,7 +3,7 @@
 module Ask
   module Tools
     module Shell
-      VERSION = "0.3.1"
+      VERSION = "0.3.3"
     end
   end
 end
