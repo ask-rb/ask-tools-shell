@@ -34,7 +34,13 @@ module Ask
 
         Dir.glob(File.join(base, glob)).each do |file|
           next unless File.file?(file)
-          next if EXCLUDE_DIRS.any? { |d| file.include?("/#{d}/") }
+
+          # Exclude by path segment relative to the search root, not by
+          # absolute-path substring: the old check matched any path
+          # containing "/tmp/" (e.g. a search rooted under the system tmp
+          # dir on Linux), excluding every file.
+          relative = file.delete_prefix("#{base}/")
+          next if relative.split("/").any? { |seg| EXCLUDE_DIRS.include?(seg) }
 
           begin
             File.readlines(file).each_with_index do |line, i|

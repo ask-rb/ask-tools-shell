@@ -47,6 +47,20 @@ module Ask
         assert_match(/invalid regex/i, result.error)
       end
 
+      def test_grep_pattern_under_system_tmp
+        # Regression: exclude-dir matching must be relative to the search
+        # root. The old check matched any absolute path containing "/tmp/",
+        # so a search rooted under the system tmp dir (the default for
+        # Dir.mktmpdir on Linux CI) excluded every file.
+        dir = Dir.mktmpdir("grep_tmp_root", "/tmp")
+        File.write(File.join(dir, "hello.rb"), "# hello world\n")
+        result = @tool.call(pattern: "hello", path: dir)
+        assert_predicate result, :ok?
+        assert_match(/hello\.rb/, result.output)
+      ensure
+        FileUtils.remove_entry(dir) if dir
+      end
+
       def test_grep_nonexistent_dir
         result = @tool.call(pattern: "test", path: "/tmp/nonexistent_grep")
         refute_predicate result, :ok?
