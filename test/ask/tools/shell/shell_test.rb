@@ -5,9 +5,9 @@ require_relative "../../../test_helper"
 module Ask
   module Tools
     class ShellTest < Minitest::Test
-      def test_shell_all_returns_all_8_tool_instances
+      def test_shell_all_returns_all_9_tool_instances
         instances = Shell.all
-        assert_equal 8, instances.size
+        assert_equal 9, instances.size
       end
 
       def test_shell_all_returns_tool_instances
@@ -56,6 +56,11 @@ module Ask
       def test_shell_all_includes_apply_patch
         names = Shell.all.map(&:name)
         assert_includes names, "apply_patch"
+      end
+
+      def test_shell_all_includes_repl
+        names = Shell.all.map(&:name)
+        assert_includes names, "repl"
       end
     end
   end

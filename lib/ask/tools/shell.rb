@@ -10,11 +10,12 @@ require_relative "shell/glob"
 require_relative "shell/grep"
 require_relative "shell/code"
 require_relative "shell/apply_patch"
+require_relative "shell/repl"
 
 module Ask
   module Tools
     module Shell
-      TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code, ApplyPatch].freeze
+      TOOLS = [Bash, Read, Write, Edit, Glob, Grep, Code, ApplyPatch, Repl].freeze
 
       def self.all
         TOOLS.map(&:new)

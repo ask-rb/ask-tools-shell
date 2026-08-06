@@ -1,3 +1,27 @@
+## [0.4.0] - 2026-08-05
+
+### Added
+- **`Ask::Tools::Repl`** — evaluate Ruby code in a persistent session (the
+  RLM / recursive-language-model pattern). A long-lived plain-ruby kernel
+  subprocess keeps state across calls: locals, `require`s, and defined
+  methods survive between evaluations, so the model composes capabilities as
+  code against a working environment instead of re-bootstrapping each time.
+  - Framed newline-delimited JSON protocol over stdin/stdout with
+    request/response id matching; concurrent calls to a session serialize.
+  - Per-evaluation timeout kills the session (state is lost, kernel
+    respawns fresh on next call); idle sessions recycle after
+    `Repl.idle_timeout` (default 300s).
+  - Named sessions shared process-wide (`session:` param, default
+    `"default"`); `reset: true` discards state; `Repl.close_session` /
+    `Repl.close_all` manage lifetimes; `at_exit` cleanup.
+  - Sessions are isolated subprocesses — a crash in one session can't take
+    others down, and a dead session is respawned transparently with one
+    retry.
+  - Kernel spawn strips bundler env vars (RUBYOPT, GEM_HOME, etc.) so the
+    session is plain ruby and sees globally installed gems — consistent
+    with the one-shot `Code` tool.
+- Registered `repl` in `Shell::TOOLS` / `Shell.all`.
+
 ## [0.3.4] - 2026-06-25
 
 ### Fixed
