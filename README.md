@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/ask-tools-shell.svg)](https://badge.fury.io/rb/ask-tools-shell)
 
-Shell, filesystem, and code execution tools for AI agents. Ships 8 tools: Bash, Read, Write, Edit, Glob, Grep, Code, and ApplyPatch. Bash and Code execute through ask-sandbox-providers; the rest operate directly on the local filesystem.
+Shell, filesystem, and code execution tools for AI agents. Ships 9 tools: Bash, Read, Write, Edit, Glob, Grep, Code, Repl, and ApplyPatch. Bash and Code execute through ask-sandbox-providers; Repl runs a persistent plain-ruby kernel; the rest operate directly on the local filesystem.
 
 ## Installation
 
@@ -16,7 +16,7 @@ gem "ask-tools-shell"
 require "ask-tools-shell"
 
 Ask::Tools::Shell.all.map(&:name)
-# => ["bash", "read", "write", "edit", "glob", "grep", "code", "apply_patch"]
+# => ["bash", "read", "write", "edit", "glob", "grep", "code", "repl", "apply_patch"]
 
 result = Ask::Tools::Bash.new.call(command: "echo hello")
 result.ok?                 # => true
@@ -35,6 +35,7 @@ result.output[:exit_code]  # => 0
 | `Ask::Tools::Glob` | `pattern`, `path` | Up to 1000 files, newest first |
 | `Ask::Tools::Grep` | `pattern`, `path`, `include` | Regex search; 100 matches max, skips `.git`, `node_modules`, `vendor`, `.bundle`, `tmp`, `log` |
 | `Ask::Tools::Code` | `code` | Runs Ruby via `Ask::Sandbox.provider`; returns `{ stdout, stderr, exit_code }` |
+| `Ask::Tools::Repl` | `code`, `session`, `reset` | Evaluates Ruby in a persistent session — state (variables, requires, methods) survives across calls; timeouts kill the session and respawn fresh |
 | `Ask::Tools::ApplyPatch` | `patchText` | Applies unified diffs inside a `*** Begin Patch` / `*** End Patch` envelope (Add File, Update File, Delete File sections) |
 
 ## Sandboxed execution
@@ -44,6 +45,9 @@ result.output[:exit_code]  # => 0
 ```ruby
 Ask::Sandbox.provider = :docker
 ```
+
+`Repl` is a durable control environment (a persistent subprocess that must
+keep state) and is not sandboxed — don't point it at untrusted code.
 
 ## Full documentation
 
