@@ -49,6 +49,15 @@ Ask::Sandbox.provider = :docker
 `Repl` is a durable control environment (a persistent subprocess that must
 keep state) and is not sandboxed — don't point it at untrusted code.
 
+### Code vs Repl
+
+`Code` runs one Ruby snippet in a sandboxed subprocess and forgets it.
+`Repl` keeps a session alive so variables and methods survive across calls.
+
+Use `Code` for isolated one-off snippets and for code you don't trust (the
+sandbox is the safety boundary). Use `Repl` for multi-step work: load data
+and define helpers once, then keep working with them.
+
 ## Full documentation
 
 The full ask-rb documentation lives at https://ask-rb.github.io/ask-docs. [ask-tools in depth](https://ask-rb.github.io/ask-docs/core/tools) covers the shell tools, the ApplyPatch format, and sandbox configuration. API reference: https://ask-rb.github.io/ask-docs/reference/api.
