@@ -1,11 +1,11 @@
 ## [0.4.0] - 2026-08-05
 
 ### Added
-- **`Ask::Tools::Repl`** — evaluate Ruby code in a persistent session. A
-  long-lived plain-ruby kernel subprocess keeps state across calls: locals,
-  `require`s, and defined methods survive between evaluations, so the model
-  composes capabilities as code against a working environment instead of
-  re-bootstrapping each time.
+- **`Ask::Tools::Repl`** — evaluate Ruby code in a persistent session (the
+  RLM / recursive language model pattern). A long-lived plain-ruby kernel
+  subprocess keeps state across calls: locals, `require`s, and defined
+  methods survive between evaluations, so the model composes capabilities as
+  code against a working environment instead of re-bootstrapping each time.
   - Framed newline-delimited JSON protocol over stdin/stdout with
     request/response id matching; concurrent calls to a session serialize.
   - Per-evaluation timeout kills the session (state is lost, kernel
