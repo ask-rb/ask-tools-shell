@@ -24,6 +24,19 @@ module Ask
           )
         end
 
+        # Never destroy what the model never saw: if Read only showed part of
+        # this file and it hasn't changed since, the rest may hold something
+        # the overwrite would silently erase.
+        if Shell::FileLedger.partially_seen?(path)
+          entry = Shell::FileLedger.entry_for(path)
+          seen = entry.lines_seen
+          return Ask::Result.error(
+            message: "Refusing to overwrite #{path}: only part of the file has been read " \
+                     "(lines #{seen.first + 1}–#{seen.last} shown, more lines exist). " \
+                     "Re-read the full file first."
+          )
+        end
+
         dir = File.dirname(path)
         FileUtils.mkdir_p(dir) unless File.directory?(dir)
 

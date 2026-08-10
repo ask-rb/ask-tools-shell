@@ -53,6 +53,20 @@ module Ask
         refute_predicate result, :ok?
         assert_match(/missing required parameter/, result.error)
       end
+
+      def test_edit_records_full_read_in_ledger
+        Dir.mktmpdir do |dir|
+          path = File.join(dir, "file.txt")
+          File.write(path, "hello world\n" + "y" * 10 + "\n")
+          reader = Read.new
+          reader.max_lines = 1
+          reader.call(path: path) # partial read
+          assert Ask::Tools::Shell::FileLedger.partially_seen?(path)
+
+          @tool.call(path: path, old_string: "hello", new_string: "hi")
+          refute Ask::Tools::Shell::FileLedger.partially_seen?(path)
+        end
+      end
     end
   end
 end

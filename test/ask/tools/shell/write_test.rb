@@ -54,6 +54,56 @@ module Ask
         refute_predicate result, :ok?
         assert_match(/missing required parameter/, result.error)
       end
+
+      # ── Partial-view ledger: refuse to destroy what was never seen ──
+
+      def test_write_denied_after_partial_read
+        path = File.join(@tmpdir, "plan.md")
+        File.write(path, (1..30).map { |i| "line #{i}" }.join("\n"))
+        reader = Read.new
+        reader.max_lines = 10
+        reader.call(path: path)
+
+        result = @tool.call(path: path, content: "overwrite")
+        refute_predicate result, :ok?
+        assert_match(/part of the file has been read/i, result.error)
+        assert_match(/re-read/i, result.error)
+        assert_equal((1..30).map { |i| "line #{i}" }.join("\n"), File.read(path)) # untouched
+      end
+
+      def test_write_allowed_after_full_read
+        path = File.join(@tmpdir, "seen.txt")
+        File.write(path, "full content\n")
+        Read.new.call(path: path)
+
+        result = @tool.call(path: path, content: "new content")
+        assert_predicate result, :ok?
+        assert_equal "new content", File.read(path)
+      end
+
+      def test_write_allowed_when_file_changed_since_partial_read
+        path = File.join(@tmpdir, "changed.txt")
+        File.write(path, (1..30).map { |i| "line #{i}" }.join("\n"))
+        reader = Read.new
+        reader.max_lines = 10
+        reader.call(path: path)
+
+        File.write(path, "rewritten by someone else\n")
+        result = @tool.call(path: path, content: "mine now")
+        assert_predicate result, :ok? # ledger entry stale; the model saw old bytes
+      end
+
+      def test_write_allowed_after_edit
+        path = File.join(@tmpdir, "edited.txt")
+        File.write(path, "hello world\n" + (1..30).map { |i| "line #{i}" }.join("\n"))
+        reader = Read.new
+        reader.max_lines = 10
+        reader.call(path: path)
+
+        Edit.new.call(path: path, old_string: "hello", new_string: "hi")
+        result = @tool.call(path: path, content: "clean rewrite")
+        assert_predicate result, :ok?
+      end
     end
   end
 end
