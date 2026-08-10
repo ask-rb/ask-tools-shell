@@ -64,7 +64,9 @@ module Ask
           assert Ask::Tools::Shell::FileLedger.partially_seen?(path)
 
           @tool.call(path: path, old_string: "hello", new_string: "hi")
-          refute Ask::Tools::Shell::FileLedger.partially_seen?(path)
+          entry = Ask::Tools::Shell::FileLedger.entry_for(path)
+          refute_nil entry
+          refute entry.partial
         end
       end
     end

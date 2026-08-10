@@ -144,6 +144,31 @@ module Ask
         assert_equal "add", action
         assert_equal "Add ", result.output[:summary][0, 4]
       end
+
+      def test_update_clears_partial_ledger_view
+        path = File.join(@tmpdir, "patched.txt")
+        File.write(path, "hello world\n" + (1..30).map { |i| "line #{i}" }.join("\n"))
+
+        # A partial read flags the file; ApplyPatch then reads it in full.
+        reader = Ask::Tools::Read.new
+        reader.max_lines = 10
+        reader.call(path: path)
+        assert Ask::Tools::Shell::FileLedger.partially_seen?(path)
+
+        patch = "*** Begin Patch\n*** Update File: #{path}\n@@\n-hello world\n+hello there\n*** End Patch"
+        result = @tool.execute(patchText: patch)
+        assert_predicate result, :ok?
+
+        # The ledger must hold a valid full-read record for the current state,
+        # not a stale partial view that would block the next write.
+        entry = Ask::Tools::Shell::FileLedger.entry_for(path)
+        refute_nil entry
+        refute entry.partial
+
+        write = Ask::Tools::Write.new.call(path: path, content: "clean rewrite")
+        assert_predicate write, :ok?
+        assert_equal "clean rewrite", File.read(path)
+      end
     end
   end
 end

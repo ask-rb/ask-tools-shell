@@ -100,6 +100,10 @@ module Ask
               return Ask::Result.error(message: "Hunk does not match file content for: #{path}")
             end
             operations.write_file(path, new_content)
+            # ApplyPatch read the whole file to apply its hunks, so the model
+            # has full context — record a full read so a later Write isn't
+            # blocked by an earlier partial view.
+            Shell::FileLedger.record(path, partial: false, lines_seen: [0, new_content.count("\n") + 1])
             results << { action: "update", path: entry[:path] }
 
           when :delete

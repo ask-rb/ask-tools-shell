@@ -1,3 +1,14 @@
+## [0.5.1] - 2026-08-10
+
+### Fixed
+- **Ledger stays consistent after full-context edits.** `Edit` and
+  `ApplyPatch` read files in full, so they now record a full read for the
+  current state after writing — previously their write left the ledger with
+  a stale partial view that could deny a subsequent `Write` even though the
+  file had been fully read in between. (`ApplyPatch` gains the same
+  post-write record `Edit` had; `Edit`'s record moved to post-write so it
+  stays valid for the current file state.)
+
 ## [0.5.0] - 2026-08-10
 
 ### Added

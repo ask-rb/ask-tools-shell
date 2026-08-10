@@ -95,10 +95,6 @@ module Ask
         end
 
         raw = operations.read_file(path)
-        # Edit reads the whole file, so the model has seen all of it — record
-        # that before the write so a later Write isn't blocked by a stale
-        # partial view (and so the ledger reflects what was actually shown).
-        Shell::FileLedger.record(path, partial: false, lines_seen: [0, raw.count("\n") + 1])
         bom, content = Shell.strip_bom(raw)
         original_ending = Shell.detect_line_ending(content)
         content = Shell.normalize_line_endings(content)
@@ -119,6 +115,10 @@ module Ask
         content = bom + content
 
         operations.write_file(path, content)
+        # Edit read the whole file to apply the change, so the model has full
+        # context — record a full read of the current state so a later Write
+        # isn't blocked by an earlier partial view.
+        Shell::FileLedger.record(path, partial: false, lines_seen: [0, content.count("\n") + 1])
         Ask::Result.ok(data: { path: path, replacements: count },
                         metadata: { path: path, replacements: count })
       end
