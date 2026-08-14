@@ -1,3 +1,16 @@
+## [0.6.0] - 2026-08-14
+
+### Added
+- **Git tools** — a scoped git surface for workspace sessions, run through
+  the sandbox (never a free-form shell, argv-array so nothing passes through
+  a shell): `git_status` (branch + changed files), `git_diff` (unstaged,
+  staged with `cached`, optional `path`), `git_log` (recent commits, optional
+  `count`), `git_commit` (commits only what is staged), `git_branch`
+  (current + local branches), `git_worktree` (worktree list). Each tool
+  honors `default_workdir` (the session workspace, pinned by the host) and
+  refuses loudly without one; all are registered in the global registry so
+  any host resolves them by name.
+
 ## [0.5.1] - 2026-08-10
 
 ### Fixed

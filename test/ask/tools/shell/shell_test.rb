@@ -5,9 +5,9 @@ require_relative "../../../test_helper"
 module Ask
   module Tools
     class ShellTest < Minitest::Test
-      def test_shell_all_returns_all_9_tool_instances
+      def test_shell_all_returns_all_tool_instances
         instances = Shell.all
-        assert_equal 9, instances.size
+        assert_equal 15, instances.size
       end
 
       def test_shell_all_returns_tool_instances
@@ -65,3 +65,10 @@ module Ask
     end
   end
 end
+
+      def test_shell_all_includes_git_tools
+        names = Shell.all.map(&:name)
+        %w[git_status git_diff git_log git_commit git_branch git_worktree].each do |git_tool|
+          assert_includes names, git_tool
+        end
+      end
