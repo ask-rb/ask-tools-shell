@@ -16,7 +16,14 @@ module Ask
       param :timeout, type: :integer, desc: "Timeout in seconds", required: false
       param :workdir, type: :string, desc: "Working directory", required: false
 
+      # The session's workspace: set by the host when it builds the
+      # session's tools, so commands without an explicit cd run in the
+      # agent's workspace — not in the host process's cwd. The agent
+      # can still override with an explicit workdir or cd.
+      attr_accessor :default_workdir
+
       def execute(command:, timeout: 30, workdir: nil)
+        workdir ||= default_workdir
         result = Ask::Sandbox.provider.call(
           command,
           timeout: timeout,

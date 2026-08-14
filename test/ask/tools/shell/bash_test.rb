@@ -46,3 +46,28 @@ module Ask
     end
   end
 end
+
+      def test_default_workdir_runs_commands_in_the_workspace
+        Dir.mktmpdir("ask-workspace") do |dir|
+          File.write(File.join(dir, "marker.txt"), "here")
+          @tool.default_workdir = dir
+
+          result = @tool.call(command: "pwd && ls")
+          assert_predicate result, :ok?
+          assert_includes result.output[:stdout], dir, "commands run in the session's workspace"
+          assert_includes result.output[:stdout], "marker.txt"
+        end
+      end
+
+      def test_explicit_workdir_overrides_the_default
+        Dir.mktmpdir("ask-default") do |default_dir|
+          Dir.mktmpdir("ask-explicit") do |explicit_dir|
+            File.write(File.join(explicit_dir, "explicit.txt"), "x")
+            @tool.default_workdir = default_dir
+
+            result = @tool.call(command: "ls", workdir: explicit_dir)
+            assert_predicate result, :ok?
+            assert_includes result.output[:stdout], "explicit.txt"
+          end
+        end
+      end
