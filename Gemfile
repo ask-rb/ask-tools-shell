@@ -5,6 +5,7 @@ gemspec
 gem "ask-tools"
 gem "ask-schema"
 gem "ask-sandbox-providers"
+gem "base64" # Ruby 3.4+: ask-core's data_uri requires it and it's no longer a default gem
 
 # gem "ask-tools", path: "../ask-tools"
 # gem "ask-schema", path: "../ask-schema"
