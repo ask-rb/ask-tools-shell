@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "shell/version"
-require "ask/tools/tool"
+require "ask/tools"
 require_relative "shell/bash"
 require_relative "shell/read"
 require_relative "shell/file_ledger"
