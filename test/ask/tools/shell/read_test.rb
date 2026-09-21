@@ -294,7 +294,7 @@ module Ask
           File.write(path, (1..50).map { |i| "line #{i}" }.join("\n"))
           tool = Read.new
           tool.max_lines = 10
-          first = tool.call(path: path)
+          tool.call(path: path)
           second = tool.call(path: path)
           refute_match(/already in context/i, second.output)
           assert_match(/^1: line 1/, second.output)
